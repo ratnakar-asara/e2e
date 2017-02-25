@@ -5,10 +5,10 @@
 **Credits**: Referred Murali's content from [here](https://github.com/hyperledger/fabric/blob/master/docs/channel-setup.md)
 
 ###Important !!!
-This has been verified on commit level **ae65a02e42aa4ef227d4ecfa50115238e3f91b03** 
+This has been verified on commit level **ea7015e722cb751efeb0f827470f58a79a15b9c9** 
 
 ```
-	git reset --hard ae65a02e42aa4ef227d4ecfa50115238e3f91b03
+	git reset --hard ea7015e722cb751efeb0f827470f58a79a15b9c9
 ```
 
 Following instructions (for Vagrant environment) requires sample chaincode from this repo, Make sure you cloned the chaincode
@@ -99,13 +99,7 @@ cd fabric
 ```
 !!!!! **IMPORTANT** !!!!!
 ### Pre-reqs
-Verified on the commit level : **2fc6bc606bc5f732d9b04ce28e1d28dfbd220173**
-
-Cherry pick below patches for End2End Scenario to work (as of today Feb23, 11 pm)
-```
-https://gerrit.hyperledger.org/r/#/c/6379
-https://gerrit.hyperledger.org/r/#/c/5955
-```
+Verified on the commit level : **ea7015e722cb751efeb0f827470f58a79a15b9c9**
 
 * Generate all **org certs** using behave.
 ```
@@ -181,7 +175,7 @@ A shellscript **single_channel.sh** is baked inside the cli conatiner, The scrip
 
     As a result of this command **myc1.block** will get created on the file system
 
-* peer0 from **peerOrg0** ) will **Join** the channel
+* peer0 from **Org0** ) will **Join** the channel
 
 * **Install** chaincode *chaincode_sample*  on a remote **peer0**
 
