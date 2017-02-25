@@ -60,6 +60,8 @@ for ch in 0 2; do
         verifyResult $res "Chaincode installation on remote peer PEER$ch is Failed"
 	echo "===================== Chaincode is installed on remote peer PEER$ch ===================== "
 done
+
+#FIXME: move each action to a function
 PEER=2
 setGlobals $PEER
 peer chaincode instantiate -C myc1 -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a","100","b","200"]}' -P "OR('Org0MSP.member','Org1MSP.member')" >log.txt 2>&1 
