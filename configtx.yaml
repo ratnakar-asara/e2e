@@ -50,7 +50,7 @@ Organizations:
         BCCSP:
             Default: SW
             SW:
-                Hash: SHA3
+                Hash: SHA2
                 Security: 256
                 # Location of Key Store. If this is unset, a location will 
                 # be chosen using 'MSPDir'/keystore
@@ -72,7 +72,7 @@ Organizations:
         BCCSP:
             Default: SW
             SW:
-                Hash: SHA3
+                Hash: SHA2
                 Security: 256
                 # Location of Key Store. If this is unset, a location will 
                 # be chosen using 'MSPDir'/keystore
@@ -101,7 +101,7 @@ Organizations:
         BCCSP:
             Default: SW
             SW:
-                Hash: SHA3
+                Hash: SHA2
                 Security: 256
                 # Location of Key Store. If this is unset, a location will 
                 # be chosen using 'MSPDir'/keystore
