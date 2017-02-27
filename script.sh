@@ -104,6 +104,6 @@ verifyResult $res "Query execution on PEER$PEER failed "
 grep -q "90" log.txt
 verifyResult $? "Query result on PEER$PEER INVALID "
 
-echo "===================== Query on chaincode on PEER0 is successful ===================== "
+echo "===================== Query on chaincode on PEER$PEER is successful ===================== "
 echo "===================== ALL GOOD , End2End execution completed ===================== "
 exit 0
