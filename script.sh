@@ -12,7 +12,7 @@ echo "Ordere IP $ORDERER_IP"
 echo "PEER0 IP $PEER0_IP"
 echo "PEER1 IP $PEER1_IP"
 echo "PEER2 IP $PEER2_IP"
-echo "PEER2 IP $PEER3_IP"
+echo "PEER3 IP $PEER3_IP"
 echo "-----------------------------------------"
 
 CORE_PEER_GOSSIP_IGNORESECURITY=true
