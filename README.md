@@ -39,10 +39,10 @@ and use these artifacts instead the ones available
 make configtxgen
 
 # Generate orderer bootstrap genesis block
-make configtxgen configtxgen -profile TwoOrgs -outputBlock <block-name>
+configtxgen -profile TwoOrgs -outputBlock <block-name>
 
 #Generate channel configuration transaction
-make configtxgen configtxgen -profile TwoOrgs -outputCreateChannelTx <cfg txn name> -channelID <channel-id>
+configtxgen -profile TwoOrgs -outputCreateChannelTx <cfg txn name> -channelID <channel-id>
 ```
 
 * Generate docker-images
