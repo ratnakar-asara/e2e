@@ -3,7 +3,7 @@
 Verified on the commit level : **7134f9f270317958fc5718762882930c3a2d4a38**
 
 
-###Two approaches for End-to-End flow in V1.0
+###Two approaches for End-to-End flow verification in Fabric V1.0
 
 ###1) Using Docker Images
 
@@ -36,6 +36,8 @@ you can generate using the below commands. However you need to replace the file 
 and use these artifacts instead the ones available
 
 ```
+make configtxgen
+
 # Generate orderer bootstrap genesis block
 make configtxgen configtxgen -profile TwoOrgs -outputBlock <block-name>
 

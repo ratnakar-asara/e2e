@@ -166,7 +166,7 @@ sleep 10
 ## Install chaincode on Peer3/Org1
 installChaincode 3
 
-#Query on chaincode on Peer0/Org0, check if the result is 90
+#Query on chaincode on Peer3/Org1, check if the result is 90
 chaincodeQuery 3 90
 
 echo "===================== All GOOD, End-2-End execution completed ===================== "
