@@ -5,10 +5,10 @@
 **Credits**: Referred Murali's content from [here](https://github.com/hyperledger/fabric/blob/master/docs/channel-setup.md)
 
 ###Important !!!
-This has been verified on commit level **ea7015e722cb751efeb0f827470f58a79a15b9c9** 
+This has been verified on commit level **ae65a02e42aa4ef227d4ecfa50115238e3f91b03** 
 
 ```
-	git reset --hard ea7015e722cb751efeb0f827470f58a79a15b9c9
+	git reset --hard ae65a02e42aa4ef227d4ecfa50115238e3f91b03
 ```
 
 Following instructions (for Vagrant environment) requires sample chaincode from this repo, Make sure you cloned the chaincode
@@ -99,7 +99,13 @@ cd fabric
 ```
 !!!!! **IMPORTANT** !!!!!
 ### Pre-reqs
-Verified on the commit level : **ea7015e722cb751efeb0f827470f58a79a15b9c9**
+Verified on the commit level : **2fc6bc606bc5f732d9b04ce28e1d28dfbd220173**
+
+Cherry pick below patches for End2End Scenario to work (as of today Feb23, 11 pm)
+```
+https://gerrit.hyperledger.org/r/#/c/6379
+https://gerrit.hyperledger.org/r/#/c/5955
+```
 
 * Generate all **org certs** using behave.
 ```
@@ -146,9 +152,9 @@ hyperledger/fabric-baseos      x86_64-0.3.0                    c3a4cf3b3350     
 clone ths repo
 
 ```
-cd fabric/examples
-git clone https://github.com/ratnakar-asara/e2e.git
-cd e2e
+git clone https://github.com/asararatnakar/chaincode_sample.git
+
+cd chaincode_sample
 ```
 
 spin the network using docker-compose file
@@ -169,13 +175,13 @@ bb4c16656b8b        hyperledger/fabric-peer      "sh -c './script.s..."   About 
 
 ### How to create a channel and join the peer to the channel
 
-A shellscript **script.sh** is baked inside the cli conatiner, The script will do the below things for you:
+A shellscript **single_channel.sh** is baked inside the cli conatiner, The script will do the below things for you:
 
-* _Creates a channel_ **myc1** with configuration transaction generated using configtxgen tool **channel.tx** (this is already mounted to cli container)
+* _Creates a channel_ **myc1** with configuration transaction generated using configtxgen tool **channelTx** (this is already mounted to cli container)
 
     As a result of this command **myc1.block** will get created on the file system
 
-* peer0 from **Org0** ) will **Join** the channel
+* peer0 from **peerOrg0** ) will **Join** the channel
 
 * **Install** chaincode *chaincode_sample*  on a remote **peer0**
 
@@ -229,6 +235,8 @@ a ==> "yugfoiuehyorye87y4yiushdofhjfjdsfjshdfsdkfsdifsdpiupisupoirusoiuou"
 Commands are available in **single_channel.sh**, 
 these commands are to create a channel and join peer1 to the channel, commands are for your reference.
 
+!!! **Important** !!!
+I am using  one peer only i.e, **peer1** for join/instantiate/invoke/query, So I fixed some environment variables. you must change these  accordingly for other peers
 ```
 CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer:7050
 ORDERER_GENERAL_LOCALMSPDIR=/opt/gopath/src/github.com/hyperledger/fabric/chaincode_sample/crypto/peer/peer1/localMspConfig
@@ -238,7 +246,7 @@ CORE_PEER_LOCALMSPID=Org1MSP
 
 ####Create channel
 
-Specify the name of the channel  with **-c** option and **-f** must be suplied with Channel creation transaction i.e., **channel.tx** (In this case it is **channel.tx** , you can mount your own channel txn )
+Specify the name of the channel  with **-c** option and **-f** must be suplied with Channel creation transaction i.e., **channel.tx** (In this case it is **channelTx** , you can mount your own channel txn )
 ```
  peer channel create -c mychannel -f channel.tx
 ```
