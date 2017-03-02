@@ -1,12 +1,10 @@
 # End-to-End Flow
 
-Verified on the commit level : **7134f9f270317958fc5718762882930c3a2d4a38**
-
 The end-to-end verification demonstrates usage of the configuration transaction
 tool for orderer bootstrap and channel creation.  The tool consumes a
 configuration transaction yaml file, which defines the cryptographic material (certs)
 used for member identity and network authentication.  In other words, the MSP information
-for each member and its corresponding network entities.  
+for each member and its corresponding network entities.
 
 _Currently the crypto material is baked into the directory.  However, there will
 be a tool in the near future to organically generate the certificates_
@@ -16,7 +14,7 @@ be a tool in the near future to organically generate the certificates_
 * Follow the steps for setting up a
 [development environment](http://hyperledger-fabric.readthedocs.io/en/latest/dev-setup/devenv/)
 
-* Clone the Fabric code base.  
+* Clone the Fabric code base.
 ```bash
 git clone https://github.com/hyperledger/fabric.git
 ```
@@ -70,13 +68,13 @@ The `configtx.yaml` contains the definitions for the sample network.  There are
 two members, each managing and maintaining two peer nodes.  Inspect this file
 to better understand the corresponding cryptographic material tied to the member
 components.  The `/crypto` directory contains the admin certs, ca certs, private
-keys for each entity, and the signing certs for each entity.  
+keys for each entity, and the signing certs for each entity.
 
 For ease of use, a script - `generateCfgTrx.sh` - is provided.  The script
-will generate the two configuration artifacts.  
+will generate the two configuration artifacts.
 
 ### Run the shell script
-Make sure you are in the `examples/e2e` directory and in your vagrant environment.  
+Make sure you are in the `examples/e2e` directory and in your vagrant environment.
 You can elect to pass in a unique name for your channel or simply execute the
 script without the `channel-ID` parameter.  If you choose not to pass in a
 unique name, then a channel with the default name of `mychannel` will be generated.
@@ -101,7 +99,7 @@ After you run the shell script, you should see an output in your terminal simila
 These configuration transactions will bundle the crypto material for the
 participating members and their network components and output an orderer genesis block
 and channel transaction artifact.  These two artifacts are required for a
-functioning transactional network with sign/verify/authenticate capabilities.  
+functioning transactional network with sign/verify/authenticate capabilities.
 
 ### Manually generate the artifacts (optional)
 
@@ -147,7 +145,7 @@ b84808d66e99        dev-peer2-mycc-1.0           "chaincode -peer.a..."   48 sec
 
 ### All in one
 
-You can also generate the artifacts and drive the tests using a single shell script.  
+You can also generate the artifacts and drive the tests using a single shell script.
 The `configtxgen` and `docker-compose` commands are embedded in the script.
 
 ```bash
@@ -159,7 +157,7 @@ channel will default to `mychannel`.
 ### What's happening behind the scenes?
 
 - A script - `script.sh` - is baked inside the CLI container.  The script drives
-the `createChannel` command against the default `mychannel` name.  
+the `createChannel` command against the default `mychannel` name.
 
 - The output of `createChannel` is a genesis block - `mychannel.block` - which is
 stored on the file system.
@@ -196,7 +194,7 @@ operations have occurred, so a query against "a" will still return a value of "1
 - A query is sent to `PEER3` for the value of "a".  This starts a third chaincode
 container by the name of `dev-peer3-mycc-1.0`.  A value of 90 is returned, correctly
 reflecting the previous transaction during which the value for key "a" was modified
-by 10.  
+by 10.
 
 ### What does this demonstrate?
 
@@ -256,7 +254,7 @@ From your vagrant environment exit the currently running containers:
 ```bash
 docker rm -f $(docker ps -aq)
 ```
-Execute a `docker images` command in your terminal to view the chaincode images.  
+Execute a `docker images` command in your terminal to view the chaincode images.
 They will look similar to the following:
 ```bash
 REPOSITORY                     TAG                             IMAGE ID            CREATED             SIZE
@@ -329,17 +327,17 @@ can mount your own configuration transaction with a different name.
 ```bash
 # the channel.tx and orderer.block are mounted in the crypto/orderer folder within your cli container
 # as a result, we pass the full path for the file
- peer channel create -c mychannel -f crypto/orderer/channel.tx
+ peer channel create -o orderer:7050 -c mychannel -f crypto/orderer/channel.tx
 ```
 
 Recall that the environment variables are required for this manual operation.  So
 the command in its entirety would be:
 ```bash
-CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig CORE_PEER_ADDRESS=peer0:7051 CORE_PEER_LOCALMSPID="Org0MSP" peer channel create -c mychannel -f crypto/orderer/channel.tx
+CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peer/peer0/localMspConfig CORE_PEER_ADDRESS=peer0:7051 CORE_PEER_LOCALMSPID="Org0MSP" peer channel create -o orderer:7050 -c mychannel -f crypto/orderer/channel.tx
 ```
 __Note__: You will remain in the CLI container for the remainder of these manual
 commands.  You must also remember to preface all commands with the corresponding
-env variables for the targeted peer.  
+env variables for the targeted peer.
 
 ### Join channel
 
@@ -358,7 +356,7 @@ CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypt
 
 Install the sample go code onto one of the four peer nodes
 ```bash
-peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_sample
+peer chaincode install -o orderer:7050 -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
 ```
 
 ### Instantiate chaincode and define the endorsement policy
@@ -369,16 +367,16 @@ snippet, we define the policy as requiring an endorsement from one peer node
 that is a part of Org1.  In our scenario, this is `PEER2` or `PEER3`
 ```bash
 #
-peer chaincode instantiate -C mychannel -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_sample -c '{"Args":["init","a", "100", "b","200"]}' -P "AND('Org1MSP.member')"
+peer chaincode instantiate -o orderer:7050 -C mychannel -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a", "100", "b","200"]}' -P "AND('Org1MSP.member')"
 ```
 
 See the [endorsement policies](http://hyperledger-fabric.readthedocs.io/en/latest/endorsement-policies/)
-documentation for more details on policy implementation.  
+documentation for more details on policy implementation.
 
 ### Invoke chaincode
 
 ```bash
-peer chaincode invoke -C mychannel -n mycc -c '{"function":"invoke","Args":["nvoke","a","b","10"]}'
+peer chaincode invoke -o orderer:7050 -C mychannel -n mycc -c '{"Args":["invoke","a","b","10"]}'
 ```
 
 **NOTE**: Make sure to wait a few seconds for the operation to complete.
@@ -386,7 +384,7 @@ peer chaincode invoke -C mychannel -n mycc -c '{"function":"invoke","Args":["nvo
 ### Query chaincode
 
 ```bash
-peer chaincode query -C mychannel -n mycc -c '{"Args":["query","a"]}'
+peer chaincode query -o orderer:7050 -C mychannel -n mycc -c '{"Args":["query","a"]}'
 ```
 The result of the above command should be as below:
 
@@ -415,10 +413,10 @@ You will also need the `ccenv` image.  From the `fabric` directory:
 make peer-docker
 ```
 Next, open two more terminals and start your vagrant environment in each.  You
-should now have a total of three terminals, all within vagrant.  
+should now have a total of three terminals, all within vagrant.
 
 Before starting, make sure to clear your ledger folder `/var/hyperledger/`.  You
-will want to do this after each run to avoid errors and duplication.  
+will want to do this after each run to avoid errors and duplication.
 ```
 rm -rf /var/hyperledger/*
 ```
@@ -458,7 +456,7 @@ __Note__: Use Vagrant window 1 for the remainder of commands
 
 Ask peer to create a channel with the configuration parameters in `channel.tx`
 ```bash
-peer channel create -c mychannel -f channel.tx
+peer channel create -o orderer:7050 -c mychannel -f channel.tx
 ```
 This will return a channel genesis block - `mychannel.block` - in your current directory.
 
@@ -473,7 +471,7 @@ peer channel join -b mychannel.block
 
 Install chaincode on the peer:
 ```bash
-peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
+peer chaincode install -o orderer:7050 -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
 ```
 
 Make sure the chaincode is in the filesystem:
@@ -486,7 +484,7 @@ You should see `mycc.1.0`
 
 Instantiate the chaincode:
 ```bash
-peer chaincode instantiate -C mychannel -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a", "100", "b","200"]}'
+peer chaincode instantiate -o orderer:7050 -C mychannel -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 -c '{"Args":["init","a", "100", "b","200"]}'
 ```
 
 Check your active containers:
@@ -503,7 +501,7 @@ bd9c6bda7560        dev-jdoe-mycc-1.0   "chaincode -peer.a..."   5 seconds ago  
 
 Issue an invoke to move "10" from "a" to "b":
 ```bash
-peer chaincode invoke -C mychannel -n mycc -c '{"Args":["invoke","a","b","10"]}'
+peer chaincode invoke -o orderer:7050 -C mychannel -n mycc -c '{"Args":["invoke","a","b","10"]}'
 ```
 Wait a few seconds for the operation to complete
 
@@ -512,7 +510,7 @@ Wait a few seconds for the operation to complete
 Query for the value of "a":
 ```bash
 # this should return 90
-peer chaincode query -C mychannel -n mycc -c '{"Args":["query","a"]}'
+peer chaincode query -o orderer:7050 -C mychannel -n mycc -c '{"Args":["query","a"]}'
 ```
 
 Don't forget to clear ledger folder `/var/hyperledger/` after each run!

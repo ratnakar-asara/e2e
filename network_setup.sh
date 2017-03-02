@@ -10,14 +10,14 @@ function printHelp () {
 }
 
 function validateArgs () {
+	if [ -z "${UP_DOWN}" ]; then
+		echo "Option up / down / restart not mentioned"
+		printHelp
+		exit 1
+	fi
 	if [ -z "${CH_NAME}" ]; then
 		echo "setting to default channel 'mychannel'"
 		CH_NAME=mychannel
-	fi
-	if [ -z "${UP_DOWN}" ]; then
-		echo "up/down/restart not mentioned"
-		printHelp
-		exit 1
 	fi
 }
 
@@ -40,7 +40,10 @@ function removeUnwantedImages() {
 }
 
 function networkUp () {
+	CURRENT_DIR=$PWD
         source generateCfgTrx.sh $CH_NAME
+	cd $CURRENT_DIR
+
 	CHANNEL_NAME=$CH_NAME docker-compose -f $COMPOSE_FILE up -d 2>&1
 	if [ $? -ne 0 ]; then
 		echo "ERROR !!!! Unable to pull the images "
