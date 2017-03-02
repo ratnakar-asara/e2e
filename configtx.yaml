@@ -9,8 +9,6 @@
 ################################################################################
 Profiles:
 
-    # SampleSingleMSPSolo defines a configuration which contains a single MSP
-    # definition (the MSP sampleconfig).
     TwoOrgs:
         Orderer:
             <<: *OrdererDefaults

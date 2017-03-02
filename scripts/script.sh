@@ -8,14 +8,13 @@ PEER2_IP=`perl -e 'use Socket; $a = inet_ntoa(inet_aton("peer2")); print "$a\n";
 PEER3_IP=`perl -e 'use Socket; $a = inet_ntoa(inet_aton("peer2")); print "$a\n";'`
 
 echo "-----------------------------------------"
-echo "Ordere IP $ORDERER_IP"
+echo "Orderer IP $ORDERER_IP"
 echo "PEER0 IP $PEER0_IP"
 echo "PEER1 IP $PEER1_IP"
 echo "PEER2 IP $PEER2_IP"
 echo "PEER3 IP $PEER3_IP"
 echo "-----------------------------------------"
 
-CORE_PEER_GOSSIP_IGNORESECURITY=true
 CORE_PEER_COMMITTER_LEDGER_ORDERER=$ORDERER_IP:7050
 CHANNEL_NAME=$1
 COUNTER=0
@@ -25,7 +24,7 @@ if [ -z "$CHANNEL_NAME" ]; then
 	echo "---- Using default channel 'mychannel'"
 	CHANNEL_NAME="mychannel"
 fi
-echo "Chanel name : "$CHANNEL_NAME
+echo "Channel name : "$CHANNEL_NAME
 
 verifyResult () {
 	if [ $1 -ne 0 ]; then
@@ -68,7 +67,7 @@ joinWithRetry () {
 	else
 		COUNTER=0
 	fi
-        verifyResult $res "After $MAX_RETRY attempts, PEER$ch is failed to Join the Channel"
+        verifyResult $res "After $MAX_RETRY attempts, PEER$ch has failed to Join the Channel"
 }
 
 joinChannel () {
@@ -76,6 +75,7 @@ joinChannel () {
 		setGlobals $ch
 		joinWithRetry $ch
 		echo "===================== PEER$ch joined on the channel \"$CHANNEL_NAME\" ===================== "
+		sleep 2
 		echo
 	done
 }
@@ -96,7 +96,7 @@ installChaincode () {
 	peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 >log.txt 2>&1
 	res=$?
 	cat log.txt
-        verifyResult $res "Chaincode installation on remote peer PEER$PEER is Failed"
+        verifyResult $res "Chaincode installation on remote peer PEER$PEER has Failed"
 	echo "===================== Chaincode is installed on remote peer PEER$PEER ===================== "
 	echo
 }
@@ -160,11 +160,12 @@ chaincodeQuery 0 100
 #Invoke on chaincode on Peer0/Org0
 echo "send Invoke transaction on Peer0/Org0 ..."
 chaincodeInvoke 0
-echo "Wait for 10 seconds ..."
-sleep 10
 
 ## Install chaincode on Peer3/Org1
 installChaincode 3
+
+echo "Wait for 10 seconds ..."
+sleep 10
 
 #Query on chaincode on Peer3/Org1, check if the result is 90
 chaincodeQuery 3 90

@@ -28,6 +28,7 @@ services:
       - CORE_PEER_ID=peer0
       - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer:7050
       - CORE_PEER_LOCALMSPID=Org0MSP
+      - CORE_PEER_GOSSIP_ORGLEADER=true
     volumes:
         - /var/run/:/host/var/run/
         - ./crypto/peer/peer0/localMspConfig:/etc/hyperledger/fabric/msp/sampleconfig
@@ -47,6 +48,7 @@ services:
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0:7051
       - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer:7050
       - CORE_PEER_LOCALMSPID=Org0MSP
+      - CORE_PEER_GOSSIP_ORGLEADER=false
     volumes:
         - /var/run/:/host/var/run/
         - ./crypto/peer/peer1/localMspConfig:/etc/hyperledger/fabric/msp/sampleconfig
@@ -67,6 +69,7 @@ services:
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0:7051
       - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer:7050
       - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_GOSSIP_ORGLEADER=true
     volumes:
         - /var/run/:/host/var/run/
         - ./crypto/peer/peer2/localMspConfig:/etc/hyperledger/fabric/msp/sampleconfig
@@ -88,6 +91,7 @@ services:
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0:7051
       - CORE_PEER_COMMITTER_LEDGER_ORDERER=orderer:7050
       - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_GOSSIP_ORGLEADER=false
     volumes:
         - /var/run/:/host/var/run/
         - ./crypto/peer/peer3/localMspConfig:/etc/hyperledger/fabric/msp/sampleconfig
@@ -117,7 +121,7 @@ services:
       - CORE_PEER_GOSSIP_IGNORESECURITY=true
       - CORE_PEER_LOCALMSPID=Org0MSP
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
-    command: sh -c './scripts/script.sh ${CHANNEL_NAME}'
+    command: sh -c './scripts/script.sh ${CHANNEL_NAME}; sleep 100000'
     volumes:
         - /var/run/:/host/var/run/
         - ./examples/:/opt/gopath/src/github.com/hyperledger/fabric/examples/
